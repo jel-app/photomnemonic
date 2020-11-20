@@ -18,7 +18,7 @@ async function screenshot(url, fullscreen) {
   };
   const options = chromium.args.concat([
     "--remote-debugging-port=9222",
-    "--window-size=2160x1080",
+    "--window-size=1920x3840",
     "--hide-scrollbars"
   ]);
 
@@ -47,7 +47,7 @@ async function screenshot(url, fullscreen) {
       mobile: false,
       deviceScaleFactor: 0,
       scale: 1,
-      width: 2160,
+      width: 1920,
       height: 0
     });
 
@@ -57,7 +57,7 @@ async function screenshot(url, fullscreen) {
     await Page.navigate({ url });
     await loading();
 
-    let height = 1080;
+    let height = 3840;
 
     if (fullscreen) {
       const result = await Runtime.evaluate({
@@ -75,7 +75,7 @@ async function screenshot(url, fullscreen) {
       mobile: false,
       deviceScaleFactor: 0,
       scale: 1,
-      width: 2160,
+      width: 1920,
       height: height
     });
 
@@ -110,7 +110,7 @@ async function screenshot(url, fullscreen) {
     }
 
     await Emulation.setVisibleSize({
-      width: meta && meta.width ? meta.width : 1280,
+      width: meta && meta.width ? meta.width : 1920,
       height: meta && meta.height ? meta.height : height
     });
 
