@@ -2,8 +2,6 @@ const chromium = require("chrome-aws-lambda");
 const Cdp = require("chrome-remote-interface");
 const { spawn } = require("child_process");
 
-const SECRET = "pass";
-
 function sleep(miliseconds = 100) {
   return new Promise(resolve => setTimeout(() => resolve(), miliseconds));
 }
@@ -20,7 +18,7 @@ async function screenshot(url, fullscreen) {
   };
   const options = chromium.args.concat([
     "--remote-debugging-port=9222",
-    "--window-size=1280x720",
+    "--window-size=2160x1080",
     "--hide-scrollbars"
   ]);
 
@@ -49,7 +47,7 @@ async function screenshot(url, fullscreen) {
       mobile: false,
       deviceScaleFactor: 0,
       scale: 1,
-      width: 1280,
+      width: 2160,
       height: 0
     });
 
@@ -59,7 +57,7 @@ async function screenshot(url, fullscreen) {
     await Page.navigate({ url });
     await loading();
 
-    let height = 720;
+    let height = 1080;
 
     if (fullscreen) {
       const result = await Runtime.evaluate({
@@ -77,7 +75,7 @@ async function screenshot(url, fullscreen) {
       mobile: false,
       deviceScaleFactor: 0,
       scale: 1,
-      width: 1280,
+      width: 2160,
       height: height
     });
 
@@ -132,19 +130,10 @@ module.exports.handler = async function handler(event, context, callback) {
   const queryStringParameters = event.queryStringParameters || {};
   const {
     url = "https://google.com",
-    fullscreen = "false",
-    secret
+    fullscreen = "false"
   } = queryStringParameters;
 
   let data;
-
-  if (secret !== SECRET) {
-    return callback(null, {
-      statusCode: 401,
-      body: "Unauthorized",
-      isBase64Encoded: false
-    });
-  }
 
   const headers = {
     "Content-Type": "image/png"

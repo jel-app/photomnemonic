@@ -15,6 +15,7 @@ provider:
     securityGroupIds:
       - ${file(config.json):photomnemonic-security-group}
     subnetIds: ${file(config.json):photomnemonic-subnet-ids}
+  endpointType: private
   resourcePolicy:
     - Effect: Allow
       Principal: "*"
