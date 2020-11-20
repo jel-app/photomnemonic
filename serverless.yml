@@ -3,17 +3,24 @@ service: photomnemonic
 provider:
   name: aws
   runtime: nodejs10.x
-  region: us-west-1
-  stage: public
-  stackName: photomnemonic-public
-  timeout: 30
-  usagePlan:
-    quota:
-      limit: 1000
-      period: MONTH
-    throttle:
-      rateLimit: 5
-      burstLimit: 10
+  region: ${file(config.json):photomnemonic-region}
+  stage: ${opt:stage, 'dev'}
+  stackName: photomnemonic-${opt:stage, 'dev'}
+  memorySize: 3008
+  role: ${file(config.json):photomnemonic-iam-role}
+  timeout: 90
+  deploymentBucket:
+    name: ${file(config.json):photomnemonic-bucket-id}
+  vpc:
+    securityGroupIds:
+      - ${file(config.json):photomnemonic-security-group}
+    subnetIds: ${file(config.json):photomnemonic-subnet-ids}
+  resourcePolicy:
+    - Effect: Allow
+      Principal: "*"
+      Action: execute-api:Invoke
+      Resource:
+        - execute-api:/*/*/*
 
 functions:
   app:

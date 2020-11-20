@@ -2,6 +2,8 @@ const chromium = require("chrome-aws-lambda");
 const Cdp = require("chrome-remote-interface");
 const { spawn } = require("child_process");
 
+const SECRET = "pass";
+
 function sleep(miliseconds = 100) {
   return new Promise(resolve => setTimeout(() => resolve(), miliseconds));
 }
@@ -130,10 +132,19 @@ module.exports.handler = async function handler(event, context, callback) {
   const queryStringParameters = event.queryStringParameters || {};
   const {
     url = "https://google.com",
-    fullscreen = "false"
+    fullscreen = "false",
+    secret
   } = queryStringParameters;
 
   let data;
+
+  if (secret !== SECRET) {
+    return callback(null, {
+      statusCode: 401,
+      body: "Unauthorized",
+      isBase64Encoded: false
+    });
+  }
 
   const headers = {
     "Content-Type": "image/png"
